@@ -1,0 +1,98 @@
+#!/usr/bin/env python 
+
+# Copyright (C) 1999-2010, Salmaso Raffaele <raffaele@salmaso.org>
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+import os
+import os.path
+import sys
+import getopt
+import datetime
+
+shortopts = 'ht'
+longopts = [ 'help', 'gz', 'zip', 'cbz', 'tgz', 'bz2', 'tz2', 'tar', 'dmg' , 'jar', 'epk', 'xpi', 'btgz', 'bbz2', 'tm']
+actions = {
+    '--gz'   : lambda pkgname, pkg: 'gzip "%s"' % pkg,
+    '--zip'  : lambda pkgname, pkg: 'zip -r "%s".zip "%s"' % (pkgname, pkg),
+    '--cbz'  : lambda pkgname, pkg: 'zip -r "%s".cbz "%s"' % (pkgname, pkg),
+    '--tgz'  : lambda pkgname, pkg: 'tar c "%s" | gzip > "%s".tar.gz' % (pkg, pkgname),
+    '--bz2'  : lambda pkgname, pkg: 'bzip2 "%s"' % pkg,
+    '--tz2'  : lambda pkgname, pkg: 'tar c "%s" | bzip2 > "%s".tar.bz2' % (pkg, pkgname),
+    '--tar'  : lambda pkgname, pkg: 'tar c "%s" > "%s".tar' % (pkg, pkgname),
+    '--dmg'  : lambda pkgname, pkg: 'hdiutil create -srcfolder "%s" "%s".dmg' % (pkg, pkg),
+    '--jar'  : lambda pkgname, pkg: 'cd "%s" && zip -r ../"%s".jar *' % (pkg, pkgname),
+    '--xpi'  : lambda pkgname, pkg: 'cd "%s" && zip -r ../"%s".xpi *' % (pkg, pkgname),
+    '--epk'  : lambda pkgname, pkg: 'cd "%s" && zip -r ../"%s".epk *' % (pkg, pkgname),
+    '--btgz' : lambda pkgname, pkg: 'tar --create --preserve-permissions "%s" | gzip > "%s".tar.gz' % (pkg, pkgname),
+    '--bbz2' : lambda pkgname, pkg: 'tar --create --preserve-permissions "%s" | bzip2 > "%s".tar.bz2' % (pkg, pkgname),
+}
+
+def usage():
+    pkgname = os.path.basename(sys.argv[0])
+    print '''%s (C) 1999-2010 Salmaso Raffaele
+This program is distribuited under the MIT/X License
+You are not allowed to remove the copyright notice
+
+Create an archive file and (optionally) compress it.
+
+usage: %s [option] dir1 [dir2 ...]
+  - option can be:
+    --gz  = use gzip
+    --bz2 = use bzip2
+    --zip = use zip
+    --tgz = use tar.gz
+    --tz2 = use tar.bz2 (default, can be omitted)
+    --tar = use tar
+    --dmg = create a .dmg file (MacOsX only)
+    --cbz = create a zip file with .cbz extension
+    --jar = create a .jar archive
+    --xpi = create a .xpi archive
+    --tm = add a timestamp''' % (pkgname, pkgname)
+
+if len(sys.argv) < 2:
+    usage()
+    sys.exit()
+
+try:
+    opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
+except getopt.GetoptError:
+    usage()
+    sys.exit(0)
+
+ext = '--tz2'
+tm = None
+for o, a in opts:
+    if o in actions.keys():
+        ext = o
+    elif o in ('-t', '--tm'):
+        tm = datetime.datetime.now().strftime('_%Y%m%d-%H%M%S')
+    elif o in ('-h', '--help'):
+        usage()
+        sys.exit(0)
+cmd = actions[ext]
+
+for pkg in pkgs:
+    if pkg.endswith('/'):
+        pkg = pkg[:-1]
+    pkgname = os.path.basename(pkg)
+    if tm:
+        pkgname+=tm
+    os.system(cmd(pkgname, pkg))
+
