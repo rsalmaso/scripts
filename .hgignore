@@ -1,0 +1,16 @@
+docs/_build
+.svnignore
+.DS_Store
+.svn
+Thumbs.db
+local_settings.py
+local_pythonpath.py
+.directory
+
+syntax: glob
+*.swp
+*~
+*-
+*.pyc
+*.kpf
+
