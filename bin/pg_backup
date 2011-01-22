@@ -2,18 +2,18 @@
 
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 1999-2010, Salmaso Raffaele <raffaele@salmaso.org>
-# 
+# Copyright (C) 1999-2011, Salmaso Raffaele <raffaele@salmaso.org>
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -34,7 +34,7 @@ longopts = [ 'host=', 'username=', 'password=', 'dest=', 'port=', 'all', 'help',
 
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    print'''%(pkgname)s (C) 2009 Salmaso Raffaele
+    sys.stdout.write('''%(pkgname)s (C) 2009-2011 Salmaso Raffaele
 This program is distribuited under the MIT/X license
 You are not allowed to remove the copyright notice
 
@@ -49,7 +49,7 @@ usage: %(pkgname)s <options>
     -W, --password = the user password (default=None)
     -p, --port = the TCP port (default=5432)
     -d, --dest <dir> where to put backup files (default=.)
-''' % { 'pkgname': pkgname }
+''' % { 'pkgname': pkgname })
 try:
     opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
 except getopt.GetoptError:
@@ -84,20 +84,20 @@ for o, a in opts:
 try:
     conn = psycopg2.connect("dbname='template1' user='%(user)s'" % { 'user': user, 'hostname': hostname});
 except Exception, e:
-    print e
-    print "I am unable to connect to the database"
+    sys.stderr.write('%s\n' % e)
+    sys.stderr.write("I am unable to connect to the database\n")
     sys.exit(1)
 
 cur = conn.cursor()
 cur.execute("""SELECT datname FROM pg_database WHERE datname not in ('template0', 'template1', 'postgres')""")
 rows = cur.fetchall()
-print "\nBackup the PostgreSQL databases:\n"
+sys.stdout.write("\nBackup the PostgreSQL databases:\n")
 os.system("""mkdir -p "%(dest)s/%(date)s/" """ % {
     'date': tm,
     'dest': dest,
 })
 for row in rows:
-    print "   ", row[0]
+    sys.stdout.write("   %s\n" % row[0])
     os.system("""pg_dump -U %(user)s %(db)s | bzip2 > "%(dest)s/%(date)s/%(db)s_%(date)s.db.bz2" """ % {
         'db': row[0],
         'date': tm,
@@ -107,7 +107,7 @@ for row in rows:
     })
 
 if all:
-    print "Dump all databases"
+    sys.stdout.write("Dump all databases\n")
     os.system("""/usr/bin/pg_dumpall | bzip2 > "%(dest)s/%(date)s/pg_dump_%(date)s.bz2" """ % {
         'date': tm,
         'user': user,

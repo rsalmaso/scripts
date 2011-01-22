@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 
-# Copyright (C) 1999-2010, Salmaso Raffaele <raffaele@salmaso.org>
-# 
+# Copyright (C) 1999-2011, Salmaso Raffaele <raffaele@salmaso.org>
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -125,8 +125,8 @@ else:
 
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    print '''%s (C) 1999-2010 Salmaso Raffaele
-This program is distributed under the MIT License
+    sys.stdout.write('''%s (C) 1999-2011 Salmaso Raffaele
+This program is distributed under the MIT/X License
 You are not allowed to remove the copyright notice
 
 This program allows to blank a cd/dvd from commandline. It
@@ -142,7 +142,8 @@ usage: %s [option]
     -e, --eject = eject disk after burning [default=no]
     -q, --quiet = no progress output will be provided
     -l, --list = list all burning devices, for --device
-        --dummy = don't turn on laser''' % (pkgname, pkgname)
+        --dummy = don't turn on laser
+''' % (pkgname, pkgname))
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
