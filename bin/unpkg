@@ -34,6 +34,8 @@ actions = {
     '.bz' : 'bzip -d "%s"',
     '.tar.bz2' : 'bzip2 -cd "%s" | tar xvf -',
     '.bz2' : 'bzip2 -d "%s"',
+    '.tar.xz' : 'xz -cd "%s" | tar xvf -',
+    '.xz' : 'xz -d "%s"',
     '.tar.Z' : 'tar Zxvf "%s"',
     '.taz' : 'tar Zxvf "%s"',
     '.Z' : 'gunzip "%s"',
@@ -86,7 +88,7 @@ usage: %s <options> file1 [file2 ... filen] [target-dir]
     .tar.bz .bz .tar.bz2 .bz2 .tar.Z .taz .Z .dsc
     .rom .tz .tar.gz .tgz .bpp .gz .tar .deb .rpm
     .zip .etheme .rar .ace .cab .jar .lha .lhz
-    .7z .cbr .cbz .pax.gz
+    .7z .cbr .cbz .pax.gz .tar.xz .xz
 ''' % (pkgname, pkgname, pkgname))
 
 if len(sys.argv) < 2:
