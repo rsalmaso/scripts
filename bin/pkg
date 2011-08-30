@@ -29,21 +29,21 @@ import datetime
 shortopts = 'ht'
 longopts = [ 'help', 'gz', 'zip', 'cbz', 'tgz', 'bz2', 'tz2', 'tar', 'dmg' , 'jar', 'epk', 'xpi', 'btgz', 'bbz2', 'txz', 'xz', 'tm']
 actions = {
-    '--gz'   : lambda pkgname, pkg: 'gzip "%(pkg)s"' % pkg,
-    '--zip'  : lambda pkgname, pkg: 'zip -r "%s".zip "%s"' % (pkgname, pkg),
-    '--cbz'  : lambda pkgname, pkg: 'zip -r "%s".cbz "%s"' % (pkgname, pkg),
-    '--tgz'  : lambda pkgname, pkg: 'tar c "%s" | gzip > "%s".tar.gz' % (pkg, pkgname),
-    '--bz2'  : lambda pkgname, pkg: 'bzip2 "%s"' % pkg,
-    '--tz2'  : lambda pkgname, pkg: 'tar c "%s" | bzip2 > "%s".tar.bz2' % (pkg, pkgname),
-    '--tar'  : lambda pkgname, pkg: 'tar c "%s" > "%s".tar' % (pkg, pkgname),
-    '--dmg'  : lambda pkgname, pkg: 'hdiutil create -srcfolder "%s" "%s".dmg' % (pkg, pkg),
-    '--jar'  : lambda pkgname, pkg: 'cd "%s" && zip -r ../"%s".jar *' % (pkg, pkgname),
-    '--xpi'  : lambda pkgname, pkg: 'cd "%s" && zip -r ../"%s".xpi *' % (pkg, pkgname),
-    '--epk'  : lambda pkgname, pkg: 'cd "%s" && zip -r ../"%s".epk *' % (pkg, pkgname),
-    '--btgz' : lambda pkgname, pkg: 'tar --create --preserve-permissions "%s" | gzip > "%s".tar.gz' % (pkg, pkgname),
-    '--bbz2' : lambda pkgname, pkg: 'tar --create --preserve-permissions "%s" | bzip2 > "%s".tar.bz2' % (pkg, pkgname),
-    '--txz'  : lambda pkgname, pkg: 'tar c "%s" | xz > "%s".tar.xz' % (pkg, pkgname),
-    '--xz'   : lambda pkgname, pkg: 'xz "%s"' % pkg,
+    '--gz'   : lambda data: 'gzip "%(pkg)s"' % data,
+    '--zip'  : lambda data: 'zip -r "%(name)s".zip "%(pkg)s"' % data,
+    '--cbz'  : lambda data: 'zip -r "%(name)s".cbz "%(pkg)s"' % data,
+    '--tgz'  : lambda data: 'tar c "%(pkg)s" | gzip > "%(name)s".tar.gz' % data,
+    '--bz2'  : lambda data: 'bzip2 "%(pkg)s"' % pkg,
+    '--tz2'  : lambda data: 'tar c "%(pkg)s" | bzip2 > "%(name)s".tar.bz2' % data,
+    '--tar'  : lambda data: 'tar c "%(pkg)s" > "%(name)s".tar' % data,
+    '--dmg'  : lambda data: 'hdiutil create -srcfolder "%(pkg)s" "%(pkg)s".dmg' % (pkg, pkg),
+    '--jar'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".jar *' % data,
+    '--xpi'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".xpi *' % data,
+    '--epk'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".epk *' % data,
+    '--btgz' : lambda data: 'tar --create --preserve-permissions "%(pkg)s" | gzip > "%(name)s".tar.gz' % data,
+    '--bbz2' : lambda data: 'tar --create --preserve-permissions "%(pkg)s" | bzip2 > "%(name)s".tar.bz2' % data,
+    '--txz'  : lambda data: 'tar c "%(pkg)s" | xz > "%(name)s".tar.xz' % data,
+    '--xz'   : lambda data: 'xz "%(pkg)s"' % data
 }
 
 def usage():
@@ -96,6 +96,6 @@ for pkg in pkgs:
         pkg = pkg[:-1]
     pkgname = os.path.basename(pkg)
     if tm:
-    os.system(cmd(pkgname, pkg))
         pkgname += tm
+    os.system(cmd({ 'name': pkgname, 'pkg': pkg }))
 
