@@ -29,44 +29,45 @@ shortopts = 'hd:'
 longopts = [ 'help', 'dest=' ]
 dest = ''
 source = os.getcwd()
-actions = {
-    '.tar.bz' : 'bzip -cd "%s" | tar xvf -',
-    '.bz' : 'bzip -d "%s"',
-    '.tar.bz2' : 'bzip2 -cd "%s" | tar xvf -',
-    '.bz2' : 'bzip2 -d "%s"',
-    '.tar.xz' : 'xz -cd "%s" | tar xvf -',
-    '.xz' : 'xz -d "%s"',
-    '.tar.Z' : 'tar Zxvf "%s"',
-    '.taz' : 'tar Zxvf "%s"',
-    '.Z' : 'gunzip "%s"',
-    '.tar.gz' : 'tar zxvf "%s"',
-    '.tgz' : 'tar zxvf "%s"',
-    '.bpp': 'tar zxvf "%s"',
-    '.etheme' : 'tar zxvf "%s"',
-    '.tz' : 'tar zxvf "%s"',
-#    '.pax.gz' : 'gunzip "%s" | cpio -i',
-#    '.pax' : 'cpio -i < "%s"',
-    '.pax.gz' : 'gunzip "%s" | pax -r -pe',
-    '.pax' : 'pax -r -pe -f "%s"',
-    '.gz' : 'gunzip "%s"',
-    '.tar' : 'tar xvf "%s"',
-    '.zip' : 'unzip -C "%s"',
-    '.cbz' : 'unzip -C "%s"',
-    '.xpi' : 'unzip -C "%s"',
-    '.deb' : 'alien -t -c -g "%s"',
-    '.rpm' : 'alien -t -c -g "%s"',
-    '.dsc' : 'dpkg-source -x "%s"',
-    '.rom' : 'unzip -C "%s"',
-    '.rar' : 'unrar x "%s"',
-    '.cbr' : 'unrar x "%s"',
-    '.ace' : 'unace e "%s"',
-    '.cab' : 'cabextract "%s"',
-    '.jar' : 'unzip -C "%s"',
-    '.war' : 'unzip -C "%s"',
-    '.lha' : 'lha x "%s"',
-    '.lhz' : 'lha x "%s"',
-    '.7z'  : '7za x "%s"'
-}
+actions = [
+    [ '.tar.bz', 'bzip -cd "%s" | tar xvf -', ],
+    [ '.bz', 'bzip -d "%s"', ],
+    [ '.tar.bz2', 'bzip2 -cd "%s" | tar xvf -', ],
+    [ '.bz2', 'bzip2 -d "%s"', ],
+    [ '.tar.xz', 'xz -cd "%s" | tar xvf -', ],
+    [ '.xz', 'xz -d "%s"', ],
+    [ '.tar.Z', 'tar Zxvf "%s"', ],
+    [ '.taz', 'tar Zxvf "%s"', ],
+    [ '.Z', 'gunzip "%s"', ],
+    [ '.tar.gz', 'tar zxvf "%s"', ],
+    [ '.tgz', 'tar zxvf "%s"', ],
+    [ '.bpp', 'tar zxvf "%s"', ],
+    [ '.etheme', 'tar zxvf "%s"', ],
+    [ '.tz', 'tar zxvf "%s"', ],
+#    [ '.pax.gz', 'gunzip "%s" | cpio -i', ],
+#    [ '.pax', 'cpio -i < "%s"', ],
+    [ '.pax.gz', 'gunzip "%s" | pax -r -pe', ],
+    [ '.pax', 'pax -r -pe -f "%s"', ],
+    [ '.gz', 'gunzip "%s"', ],
+    [ '.tar', 'tar xvf "%s"', ],
+    [ '.zip', 'unzip -C "%s"', ],
+    [ '.cbz', 'unzip -C "%s"', ],
+    [ '.xpi', 'unzip -C "%s"', ],
+    [ '.deb', 'alien -t -c -g "%s"', ],
+    [ '.rpm', 'alien -t -c -g "%s"', ],
+    [ '.dsc', 'dpkg-source -x "%s"', ],
+    [ '.rom', 'unzip -C "%s"', ],
+    [ '.rar', 'unrar x "%s"', ],
+    [ '.cbr', 'unrar x "%s"', ],
+    [ '.ace', 'unace e "%s"', ],
+    [ '.cab', 'cabextract "%s"', ],
+    [ '.jar', 'unzip -C "%s"', ],
+    [ '.war', 'unzip -C "%s"', ],
+    [ '.lha', 'lha x "%s"', ],
+    [ '.lhz', 'lha x "%s"', ],
+    [ '.7z' , '7za x "%s"', ],
+]
+
 
 def usage():
     pkgname = os.path.basename(sys.argv[0])
@@ -122,9 +123,10 @@ if dest != '':
 for pkg in pkgs:
     pkg = os.path.join(source, pkg)
     try:
-        for k in actions.keys():
-            if pkg.endswith(k):
-                os.system(actions[k] % pkg)
+        for row in actions:
+            suffix, action = row[0], row[1]
+            if pkg.endswith(suffix):
+                os.system(action % pkg)
                 raise StopIteration
         sys.stdout.write('package type for %s not supported\n' % pkg)
     except StopIteration:
