@@ -96,6 +96,6 @@ for pkg in pkgs:
         pkg = pkg[:-1]
     pkgname = os.path.basename(pkg)
     if tm:
-        pkgname+=tm
     os.system(cmd(pkgname, pkg))
+        pkgname += tm
 
