@@ -79,7 +79,7 @@ except getopt.GetoptError:
     usage()
     sys.exit(0)
 
-ext = '--tz2'
+ext = '--xz'
 tm = None
 for o, a in opts:
     if o in actions.keys():
