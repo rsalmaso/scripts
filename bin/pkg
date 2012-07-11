@@ -46,9 +46,13 @@ actions = {
     '--xz'   : lambda data: 'xz "%(pkg)s"' % data
 }
 
+def puts(*args):
+    sys.stdout.write(''.join(args))
+    sys.stdout.write('\n')
+
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    sys.stdout.write('''%s (C) 1999-2011 Salmaso Raffaele
+    puts('''%s (C) 1999-2011 Salmaso Raffaele
 This program is distribuited under the MIT/X License
 You are not allowed to remove the copyright notice
 
