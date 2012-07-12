@@ -102,7 +102,7 @@ os.system("""mkdir -p "%(dest)s/%(date)s/" """ % {
 })
 for row in rows:
     puts("   %s\n" % row[0])
-    os.system("""pg_dump -U %(user)s %(db)s | bzip2 > "%(dest)s/%(date)s/%(db)s_%(date)s.db.bz2" """ % {
+    os.system("""pg_dump -U %(user)s %(db)s | xz > "%(dest)s/%(date)s/%(db)s_%(date)s.db.xz" """ % {
         'db': row[0],
         'date': tm,
         'user': user,
@@ -112,7 +112,7 @@ for row in rows:
 
 if all:
     puts("Dump all databases\n")
-    os.system("""/usr/bin/pg_dumpall | bzip2 > "%(dest)s/%(date)s/pg_dump_%(date)s.bz2" """ % {
+    os.system("""/usr/bin/pg_dumpall | xz > "%(dest)s/%(date)s/pg_dump_%(date)s.xz" """ % {
         'date': tm,
         'user': user,
         'hostname': hostname,
