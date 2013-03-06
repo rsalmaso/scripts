@@ -29,8 +29,8 @@ import getopt
 import datetime
 import psycopg2
 
-shortopts = 'h:U:W:d:p:a'
-longopts = [ 'host=', 'username=', 'password=', 'dest=', 'port=', 'all', 'help', ]
+shortopts = 'h:u:W:d:p:a'
+longopts = [ 'host=', 'user=', 'password=', 'dest=', 'port=', 'all', 'help', ]
 
 def puts(*args):
     sys.stdout.write(''.join(args))
@@ -49,7 +49,7 @@ usage: %(pkgname)s <options>
   options:
         --help = show this text
     -h, --host = the hostname (default=localhost)
-    -U, --username = the user (default=postgres)
+    -u, --user = the user (default=postgres)
     -W, --password = the user password (default=None)
     -p, --port = the TCP port (default=5432)
     -d, --dest <dir> where to put backup files (default=.)
@@ -71,7 +71,7 @@ all = False
 for o, a in opts:
     if o in ('-h', '--host'):
         hostname = a
-    elif o in ('-U', '--user'):
+    elif o in ('-u', '--user'):
         user = a
     elif o in ('-W', '--password'):
         password = a
@@ -87,7 +87,7 @@ for o, a in opts:
 
 try:
     conn = psycopg2.connect("dbname='template1' user='%(user)s'" % { 'user': user, 'hostname': hostname});
-except Exception, e:
+except Exception as e:
     sys.stderr.write('%s\n' % e)
     sys.stderr.write("I am unable to connect to the database\n")
     sys.exit(1)
