@@ -29,7 +29,7 @@ import getopt
 import datetime
 import psycopg2
 
-shortopts = 'h:u:W:d:p:a'
+shortopts = 'h:u:w:d:p:a'
 longopts = [ 'host=', 'user=', 'password=', 'dest=', 'port=', 'all', 'help', ]
 
 def puts(*args):
@@ -50,7 +50,7 @@ usage: %(pkgname)s <options>
         --help = show this text
     -h, --host = the hostname (default=localhost)
     -u, --user = the user (default=postgres)
-    -W, --password = the user password (default=None)
+    -w, --password = the user password (default=none)
     -p, --port = the TCP port (default=5432)
     -d, --dest <dir> where to put backup files (default=.)
 ''' % { 'pkgname': pkgname })
@@ -73,7 +73,7 @@ for o, a in opts:
         hostname = a
     elif o in ('-u', '--user'):
         user = a
-    elif o in ('-W', '--password'):
+    elif o in ('-w', '--password'):
         password = a
     elif o in ('-p', '--port'):
         port = a
