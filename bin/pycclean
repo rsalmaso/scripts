@@ -1,0 +1,6 @@
+#!/bin/sh
+
+find . -name "*~" -print0 | xargs -d '\n' -0 rm -rf
+find . -name "*.pyc" -print0 | xargs -d '\n' -0 rm -rf
+find . -name "*\$py.class" -print0 | xargs -d '\n' -0 rm -rf
+
