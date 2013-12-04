@@ -33,13 +33,9 @@ import MySQLdb
 shortopts = 'h:U:W:d:p:a'
 longopts = [ 'host=', 'username=', 'password=', 'dest=', 'port=', 'all', 'help', ]
 
-def puts(*args):
-    sys.stdout.write(''.join(args))
-    sys.stdout.write('\n')
-
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    puts('''%(pkgname)s (C) 2009-2013 Salmaso Raffaele
+    print('''%(pkgname)s (C) 2009-2013 Salmaso Raffaele
 This program is distribuited under the MIT/X license
 You are not allowed to remove the copyright notice
 
@@ -96,7 +92,7 @@ except Exception, e:
 cur = conn.cursor()
 cur.execute("""show databases""")
 rows = cur.fetchall()
-puts("\nBackup the MySQL databases:\n")
+print("\nBackup the MySQL databases:\n")
 os.system("""mkdir -p "%(dest)s/%(date)s/" """ % {
     'date': tm,
     'dest': dest,
@@ -110,7 +106,7 @@ if port:
     port = '--port=%s' % port
 
 for row in rows:
-    puts("   %s\n" % row[0])
+    print("   %s\n" % row[0])
     os.system("""/usr/bin/mysqldump --user=%(user)s %(host)s %(port)s %(passwd)s %(db)s | xz > "%(dest)s/%(date)s/%(db)s_%(date)s.db.xz" """ % {
         'db': row[0],
         'date': tm,
@@ -122,7 +118,7 @@ for row in rows:
     })
 
 if all:
-    puts("Dump all databases\n")
+    print("Dump all databases\n")
     os.system("""/usr/bin/mysqldump --all-databases --user=%(user)s %(host)s %(port)s %(passwd)s | xz > "%(dest)s/%(date)s/mysqldump_%(date)s.xz" """ % {
         'date': tm,
         'user': user,

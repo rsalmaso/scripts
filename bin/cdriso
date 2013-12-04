@@ -54,13 +54,9 @@ labelOption = {
 }
 label = ''
 
-def puts(*args):
-    sys.stdout.write(''.join(args))
-    sys.stdout.write('\n')
-
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    puts('''%s (C) 1999-2013 Salmaso Raffaele, 2005 PaulTT
+    print('''%s (C) 1999-2013 Salmaso Raffaele, 2005 PaulTT
 This program is distributed under the modified BSD License
 You are not allowed to remove the copyright notice
 

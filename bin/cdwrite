@@ -29,10 +29,6 @@ import getopt
 shortopts = 'hd:s:veql'
 longopts = [ 'help', 'device=', 'speed=', 'verify', 'eject', 'quiet', 'list', 'dummy' ]
 
-def puts(*args):
-    sys.stdout.write(''.join(args))
-    sys.stdout.write('\n')
-
 class App:
     def __init__(self, cmdline, device, speed, verify, eject, quiet, dummy, list):
         self._cmdline = cmdline
@@ -156,7 +152,7 @@ else:
 
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    puts('''%s (C) 1999-2013 Salmaso Raffaele
+    print('''%s (C) 1999-2013 Salmaso Raffaele
 This program is distributed under the MIT/X License
 You are not allowed to remove the copyright notice
 
@@ -206,11 +202,11 @@ if len(args) > 0:
         os.system(exe(args[0]))
         sys.exit(0)
     else:
-        puts('"%s" is not a file' % args[0])
+        print('"%s" is not a file' % args[0])
 elif dolist:
     # dolist : doesn't need a file to be burn
     os.system(exe(''))
 else:
-    puts('You must provide a file to burn')
+    print('You must provide a file to burn')
 sys.exit(-1)
 

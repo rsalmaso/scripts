@@ -33,13 +33,9 @@ import psycopg2
 shortopts = 'h:u:w:d:p:a'
 longopts = [ 'host=', 'user=', 'password=', 'dest=', 'port=', 'all', 'help', ]
 
-def puts(*args):
-    sys.stdout.write(''.join(args))
-    sys.stdout.write('\n')
-
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    puts('''%(pkgname)s (C) 2009-2013 Salmaso Raffaele
+    print('''%(pkgname)s (C) 2009-2013 Salmaso Raffaele
 This program is distribuited under the MIT/X license
 You are not allowed to remove the copyright notice
 
@@ -96,13 +92,13 @@ except Exception as e:
 cur = conn.cursor()
 cur.execute("""SELECT datname FROM pg_database WHERE datname not in ('template0', 'template1', 'postgres')""")
 rows = cur.fetchall()
-puts("\nBackup the PostgreSQL databases:\n")
+print("\nBackup the PostgreSQL databases:\n")
 os.system("""mkdir -p "%(dest)s/%(date)s/" """ % {
     'date': tm,
     'dest': dest,
 })
 for row in rows:
-    puts("   %s\n" % row[0])
+    print("   %s\n" % row[0])
     os.system("""pg_dump -U %(user)s %(db)s | xz > "%(dest)s/%(date)s/%(db)s_%(date)s.db.xz" """ % {
         'db': row[0],
         'date': tm,
@@ -112,7 +108,7 @@ for row in rows:
     })
 
 if all:
-    puts("Dump all databases\n")
+    print("Dump all databases\n")
     os.system("""/usr/bin/pg_dumpall | xz > "%(dest)s/%(date)s/pg_dump_%(date)s.xz" """ % {
         'date': tm,
         'user': user,
