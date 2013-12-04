@@ -52,6 +52,7 @@ actions = [
     [ '.tar', 'tar xvf "%s"', ],
     [ '.zip', 'unzip -C "%s"', ],
     [ '.cbz', 'unzip -C "%s"', ],
+    [ '.epub', 'unzip -C "%s"', ],
     [ '.xpi', 'unzip -C "%s"', ],
     [ '.deb', 'alien -t -c -g "%s"', ],
     [ '.rpm', 'alien -t -c -g "%s"', ],
@@ -92,7 +93,7 @@ usage: %s <options> file1 [file2 ... filen] [target-dir]
     .tar.bz .bz .tar.bz2 .bz2 .tar.Z .taz .Z .dsc
     .rom .tz .tar.gz .tgz .bpp .gz .tar .deb .rpm
     .zip .etheme .rar .ace .cab .jar .lha .lhz
-    .7z .cbr .cbz .pax.gz .tar.xz .xz
+    .7z .cbr .cbz .pax.gz .tar.xz .xz .epub
 ''' % (pkgname, pkgname, pkgname))
 
 if len(sys.argv) < 2:

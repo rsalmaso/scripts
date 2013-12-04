@@ -27,7 +27,7 @@ import getopt
 import datetime
 
 shortopts = 'ht'
-longopts = [ 'help', 'gz', 'zip', 'cbz', 'tgz', 'bz2', 'tz2', 'tar', 'dmg' , 'jar', 'epk', 'xpi', 'btgz', 'bbz2', 'txz', 'xz', 'tm']
+longopts = [ 'help', 'gz', 'zip', 'cbz', 'epub', 'tgz', 'bz2', 'tz2', 'tar', 'dmg' , 'jar', 'epk', 'xpi', 'btgz', 'bbz2', 'txz', 'xz', 'tm']
 actions = {
     '--gz'   : lambda data: 'gzip "%(pkg)s"' % data,
     '--zip'  : lambda data: 'zip -r "%(name)s".zip "%(pkg)s"' % data,
@@ -40,6 +40,7 @@ actions = {
     '--jar'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".jar *' % data,
     '--xpi'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".xpi *' % data,
     '--epk'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".epk *' % data,
+    '--epub'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".epub *' % data,
     '--btgz' : lambda data: 'tar --create --preserve-permissions "%(pkg)s" | gzip > "%(name)s".tar.gz' % data,
     '--bbz2' : lambda data: 'tar --create --preserve-permissions "%(pkg)s" | bzip2 > "%(name)s".tar.bz2' % data,
     '--txz'  : lambda data: 'tar c "%(pkg)s" | xz > "%(name)s".tar.xz' % data,
