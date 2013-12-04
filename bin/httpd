@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # Copyright (C) 1999-2013, Salmaso Raffaele <raffaele@salmaso.org>
 #
@@ -20,5 +21,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-python -m SimpleHTTPServer
+from __future__ import absolute_import, division, print_function, unicode_literals
+import sys
+
+try:
+    from http.server import SimpleHTTPRequestHandler
+except ImportError:
+    from SimpleHTTPServer import SimpleHTTPRequestHandler
+
+try:
+    from http.server import HTTPServer
+except ImportError:
+    from SocketServer import TCPServer as HTTPServer
+
+server_port = 8000
+try:
+    server_port = int(sys.argv[1])
+except:
+    pass
+
+httpd = HTTPServer(("", server_port), SimpleHTTPRequestHandler)
+print("serving at port %s" % server_port)
+httpd.serve_forever()
 
