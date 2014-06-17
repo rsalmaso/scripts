@@ -68,6 +68,7 @@ actions = [
     [ '.lha', 'lha x "%s"', ],
     [ '.lhz', 'lha x "%s"', ],
     [ '.7z' , '7za x "%s"', ],
+    [ '.zipx' , '7z x "%s"', ],
 ]
 
 def usage():
@@ -89,7 +90,7 @@ usage: %s <options> file1 [file2 ... filen] [target-dir]
 %s can recognize these extensions:
     .tar.bz .bz .tar.bz2 .bz2 .tar.Z .taz .Z .dsc
     .rom .tz .tar.gz .tgz .bpp .gz .tar .deb .rpm
-    .zip .etheme .rar .ace .cab .jar .lha .lhz
+    .zip .zipx .etheme .rar .ace .cab .jar .lha .lhz
     .7z .cbr .cbz .pax.gz .tar.xz .xz .epub
 ''' % (pkgname, pkgname, pkgname))
 
