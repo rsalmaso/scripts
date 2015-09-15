@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 1999-2013, Salmaso Raffaele <raffaele@salmaso.org>
+# Copyright (C) 1999-2015, Raffaele Salmaso <raffaele@salmaso.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +34,7 @@ longopts = [ 'host=', 'user=', 'password=', 'dest=', 'port=', 'all', 'help', ]
 
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    print('''%(pkgname)s (C) 2009-2013 Salmaso Raffaele
+    print('''%(pkgname)s (C) 1999-2015, Raffaele Salmaso
 This program is distribuited under the MIT/X license
 You are not allowed to remove the copyright notice
 
@@ -115,4 +114,3 @@ if all:
         'hostname': hostname,
         'dest': dest,
     })
-

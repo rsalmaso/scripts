@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 1999-2013, Salmaso Raffaele <raffaele@salmaso.org>
+# Copyright (C) 1999-2015, Raffaele Salmaso <raffaele@salmaso.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,4 +21,3 @@
 # THE SOFTWARE.
 
 dig +short myip.opendns.com @resolver1.opendns.com
-
