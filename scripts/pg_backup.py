@@ -50,67 +50,72 @@ usage: %(pkgname)s <options>
     -p, --port = the TCP port (default=5432)
     -d, --dest <dir> where to put backup files (default=.)
 ''' % { 'pkgname': pkgname })
-try:
-    opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
-except getopt.GetoptError:
-    usage()
-    sys.exit(0)
 
-tm = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-user = 'postgres'
-hostname = 'localhost'
-password = None
-dest = '.'
-port = '5432'
-all = False
-
-for o, a in opts:
-    if o in ('-h', '--host'):
-        hostname = a
-    elif o in ('-u', '--user'):
-        user = a
-    elif o in ('-w', '--password'):
-        password = a
-    elif o in ('-p', '--port'):
-        port = a
-    elif o in ('-d', '--dest'):
-        dest = a
-    elif o in ('-a', '--all'):
-        all = True
-    elif o == '--help':
+def main():
+    try:
+        opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
+    except getopt.GetoptError:
         usage()
         sys.exit(0)
 
-try:
-    conn = psycopg2.connect("dbname='template1' user='%(user)s'" % { 'user': user, 'hostname': hostname});
-except Exception as e:
-    sys.stderr.write('%s\n' % e)
-    sys.stderr.write("I am unable to connect to the database\n")
-    sys.exit(1)
+    tm = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+    user = 'postgres'
+    hostname = 'localhost'
+    password = None
+    dest = '.'
+    port = '5432'
+    all = False
 
-cur = conn.cursor()
-cur.execute("""SELECT datname FROM pg_database WHERE datname not in ('template0', 'template1', 'postgres')""")
-rows = cur.fetchall()
-print("\nBackup the PostgreSQL databases:\n")
-os.system("""mkdir -p "%(dest)s/%(date)s/" """ % {
-    'date': tm,
-    'dest': dest,
-})
-for row in rows:
-    print("   %s\n" % row[0])
-    os.system("""pg_dump -U %(user)s %(db)s | xz > "%(dest)s/%(date)s/%(db)s_%(date)s.db.xz" """ % {
-        'db': row[0],
+    for o, a in opts:
+        if o in ('-h', '--host'):
+            hostname = a
+        elif o in ('-u', '--user'):
+            user = a
+        elif o in ('-w', '--password'):
+            password = a
+        elif o in ('-p', '--port'):
+            port = a
+        elif o in ('-d', '--dest'):
+            dest = a
+        elif o in ('-a', '--all'):
+            all = True
+        elif o == '--help':
+            usage()
+            sys.exit(0)
+
+    try:
+        conn = psycopg2.connect("dbname='template1' user='%(user)s'" % { 'user': user, 'hostname': hostname});
+    except Exception as e:
+        sys.stderr.write('%s\n' % e)
+        sys.stderr.write("I am unable to connect to the database\n")
+        sys.exit(1)
+
+    cur = conn.cursor()
+    cur.execute("""SELECT datname FROM pg_database WHERE datname not in ('template0', 'template1', 'postgres')""")
+    rows = cur.fetchall()
+    print("\nBackup the PostgreSQL databases:\n")
+    os.system("""mkdir -p "%(dest)s/%(date)s/" """ % {
         'date': tm,
-        'user': user,
-        'hostname': hostname,
         'dest': dest,
     })
+    for row in rows:
+        print("   %s\n" % row[0])
+        os.system("""pg_dump -U %(user)s %(db)s | xz > "%(dest)s/%(date)s/%(db)s_%(date)s.db.xz" """ % {
+            'db': row[0],
+            'date': tm,
+            'user': user,
+            'hostname': hostname,
+            'dest': dest,
+        })
 
-if all:
-    print("Dump all databases\n")
-    os.system("""/usr/bin/pg_dumpall | xz > "%(dest)s/%(date)s/pg_dump_%(date)s.xz" """ % {
-        'date': tm,
-        'user': user,
-        'hostname': hostname,
-        'dest': dest,
-    })
+    if all:
+        print("Dump all databases\n")
+        os.system("""/usr/bin/pg_dumpall | xz > "%(dest)s/%(date)s/pg_dump_%(date)s.xz" """ % {
+            'date': tm,
+            'user': user,
+            'hostname': hostname,
+            'dest': dest,
+        })
+
+if __name__ == "__main__":
+    main()

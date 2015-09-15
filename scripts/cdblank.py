@@ -147,31 +147,35 @@ usage: %s [option]
         --dummy = don't turn on laser
 ''' % (pkgname, pkgname))
 
-try:
-    opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
-except getopt.GetoptError:
-    usage()
-    sys.exit(-1)
-
-for o, a in opts:
-    if o in ('-a', '--all'):
-        exe.blank('full')
-    elif o in ('-f', '--fast'):
-        exe.blank('fast')
-    elif o in ('-d', '--device'):
-        exe.device(a)
-    elif o in ('-s', '--speed'):
-        exe.speed()
-    elif o in ('-q', '--quiet'):
-        exe.quiet()
-    elif o in ('-e', '--eject'):
-        exe.eject()
-    elif o in ('-l', '--list'):
-        exe.list()
-    elif o == '--dummy':
-        exe.dummy()
-    elif o in ('-h', '--help'):
+def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
+    except getopt.GetoptError:
         usage()
-        sys.exit(0)
+        sys.exit(-1)
 
-os.system(exe())
+    for o, a in opts:
+        if o in ('-a', '--all'):
+            exe.blank('full')
+        elif o in ('-f', '--fast'):
+            exe.blank('fast')
+        elif o in ('-d', '--device'):
+            exe.device(a)
+        elif o in ('-s', '--speed'):
+            exe.speed()
+        elif o in ('-q', '--quiet'):
+            exe.quiet()
+        elif o in ('-e', '--eject'):
+            exe.eject()
+        elif o in ('-l', '--list'):
+            exe.list()
+        elif o == '--dummy':
+            exe.dummy()
+        elif o in ('-h', '--help'):
+            usage()
+            sys.exit(0)
+
+    os.system(exe())
+
+if __name__ == "__main__":
+    main()

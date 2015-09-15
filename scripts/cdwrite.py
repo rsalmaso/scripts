@@ -171,42 +171,46 @@ usage: %s [options] <file.iso>
         --dummy = don't turn on laser
 ''' % (pkgname, pkgname))
 
-try:
-    opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
-except getopt.GetoptError:
-    usage()
+def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
+    except getopt.GetoptError:
+        usage()
+        sys.exit(-1)
+
+    dolist = False
+    for o, a in opts:
+        if o in ('-d', '--device'):
+            exe.device(a)
+        elif o in ('-s', '--speed'):
+            exe.speed(a)
+        elif o in ('-v', '--verify'):
+            exe.verify()
+        elif o in ('-e', '--eject'):
+            exe.eject()
+        elif o in ('-l', '--list'):
+            exe.list()
+            dolist = True
+        elif o in ('-q', '--quiet'):
+            exe.quiet()
+        elif o == '--dummy':
+            exe.dummy()
+        elif o in ('-h', '--help'):
+            usage()
+            sys.exit(0)
+
+    if len(args) > 0:
+        if os.path.isfile(args[0]):
+            os.system(exe(args[0]))
+            sys.exit(0)
+        else:
+            print('"%s" is not a file' % args[0])
+    elif dolist:
+        # dolist : doesn't need a file to be burn
+        os.system(exe(''))
+    else:
+        print('You must provide a file to burn')
     sys.exit(-1)
 
-dolist = False
-for o, a in opts:
-    if o in ('-d', '--device'):
-        exe.device(a)
-    elif o in ('-s', '--speed'):
-        exe.speed(a)
-    elif o in ('-v', '--verify'):
-        exe.verify()
-    elif o in ('-e', '--eject'):
-        exe.eject()
-    elif o in ('-l', '--list'):
-        exe.list()
-        dolist = True
-    elif o in ('-q', '--quiet'):
-        exe.quiet()
-    elif o == '--dummy':
-        exe.dummy()
-    elif o in ('-h', '--help'):
-        usage()
-        sys.exit(0)
-
-if len(args) > 0:
-    if os.path.isfile(args[0]):
-        os.system(exe(args[0]))
-        sys.exit(0)
-    else:
-        print('"%s" is not a file' % args[0])
-elif dolist:
-    # dolist : doesn't need a file to be burn
-    os.system(exe(''))
-else:
-    print('You must provide a file to burn')
-sys.exit(-1)
+if __name__ == "__main__":
+    main()

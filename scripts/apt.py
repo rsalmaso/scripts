@@ -286,6 +286,9 @@ class Apt(object):
             name = 'help'
         self.commands[name].run(args[1:])
 
-if __name__ == '__main__':
+def main():
     apt = Apt()
     apt.run(sys.argv[1:])
+
+if __name__ == "__main__":
+    main()

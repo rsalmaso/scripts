@@ -75,31 +75,35 @@ The .iso image will create with RockRidge
 and Joliet extension
 ''' % (pkgname, pkgname))
 
-try:
-    opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
-except getopt.GetoptError:
-    usage()
-    sys.exit(-1)
-
-for o, a in opts:
-    if o in ('-q', '--quiet'):
-        quiet = quietOption[exe]
-    elif o in ('-l', '--label'):
-        label = labelOption[exe] % a
-    elif o in ('-h', '--help'):
+def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
+    except getopt.GetoptError:
         usage()
-        sys.exit(0)
+        sys.exit(-1)
 
-source = args[0]
-if source.endswith('/'):
-    source = source[:-1]
-if label == '':
-    label = labelOption[exe] % os.path.basename(source)
-if len(args) < 2:
-    output = source + '.iso'
-else:
-    output = args[1]
-source = '"' + source + '"'
-cmd = ' '.join([cmdline[exe] % output, label, source])
+    for o, a in opts:
+        if o in ('-q', '--quiet'):
+            quiet = quietOption[exe]
+        elif o in ('-l', '--label'):
+            label = labelOption[exe] % a
+        elif o in ('-h', '--help'):
+            usage()
+            sys.exit(0)
 
-os.system(cmd)
+    source = args[0]
+    if source.endswith('/'):
+        source = source[:-1]
+    if label == '':
+        label = labelOption[exe] % os.path.basename(source)
+    if len(args) < 2:
+        output = source + '.iso'
+    else:
+        output = args[1]
+    source = '"' + source + '"'
+    cmd = ' '.join([cmdline[exe] % output, label, source])
+
+    os.system(cmd)
+
+if __name__ == "__main__":
+    main()

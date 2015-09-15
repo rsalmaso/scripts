@@ -95,42 +95,46 @@ usage: %s <options> file1 [file2 ... filen] [target-dir]
     .7z .cbr .cbz .pax.gz .tar.xz .xz .epub
 ''' % (pkgname, pkgname, pkgname))
 
-if len(sys.argv) < 2:
-    usage()
-    sys.exit(0)
-
-try:
-    opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
-except getopt.GetoptError:
-    usage()
-    sys.exit(0)
-
-for o, a in opts:
-    if o in ('-d', '--dest'):
-        dest = a
-    elif o in ('-h', '--help'):
+def main():
+    if len(sys.argv) < 2:
         usage()
         sys.exit(0)
 
-if dest == '':
-    if not os.path.isfile(pkgs[-1]):
-        dest = pkgs[-1]
-        pkgs = pkgs[:-1]
-        if dest.endswith('/'):
-            dest = dest[:-1]
-if dest != '':
-    if not os.path.exists(dest):
-        os.makedirs(dest)
-    os.chdir(dest)
-
-for pkg in pkgs:
-    pkg = os.path.join(source, pkg)
     try:
-        for row in actions:
-            suffix, action = row[0], row[1]
-            if pkg.endswith(suffix):
-                os.system(action % pkg)
-                raise StopIteration
-        print('package type for %s not supported' % pkg)
-    except StopIteration:
-        pass
+        opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
+    except getopt.GetoptError:
+        usage()
+        sys.exit(0)
+
+    for o, a in opts:
+        if o in ('-d', '--dest'):
+            dest = a
+        elif o in ('-h', '--help'):
+            usage()
+            sys.exit(0)
+
+    if dest == '':
+        if not os.path.isfile(pkgs[-1]):
+            dest = pkgs[-1]
+            pkgs = pkgs[:-1]
+            if dest.endswith('/'):
+                dest = dest[:-1]
+    if dest != '':
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+        os.chdir(dest)
+
+    for pkg in pkgs:
+        pkg = os.path.join(source, pkg)
+        try:
+            for row in actions:
+                suffix, action = row[0], row[1]
+                if pkg.endswith(suffix):
+                    os.system(action % pkg)
+                    raise StopIteration
+            print('package type for %s not supported' % pkg)
+        except StopIteration:
+            pass
+
+if __name__ == "__main__":
+    main()

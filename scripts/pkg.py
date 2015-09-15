@@ -72,32 +72,36 @@ usage: %s [option] dir1 [dir2 ...]
     --tm = add a timestamp
 ''' % (pkgname, pkgname))
 
-if len(sys.argv) < 2:
-    usage()
-    sys.exit()
+def main():
+    if len(sys.argv) < 2:
+        usage()
+        sys.exit()
 
-try:
-    opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
-except getopt.GetoptError:
-    usage()
-    sys.exit(0)
-
-ext = '--txz'
-tm = None
-for o, a in opts:
-    if o in actions.keys():
-        ext = o
-    elif o in ('-t', '--tm'):
-        tm = datetime.datetime.now().strftime('_%Y%m%d-%H%M%S')
-    elif o in ('-h', '--help'):
+    try:
+        opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
+    except getopt.GetoptError:
         usage()
         sys.exit(0)
-cmd = actions[ext]
 
-for pkg in pkgs:
-    if pkg.endswith('/'):
-        pkg = pkg[:-1]
-    pkgname = os.path.basename(pkg)
-    if tm:
-        pkgname += tm
-    os.system(cmd({ 'name': pkgname, 'pkg': pkg }))
+    ext = '--txz'
+    tm = None
+    for o, a in opts:
+        if o in actions.keys():
+            ext = o
+        elif o in ('-t', '--tm'):
+            tm = datetime.datetime.now().strftime('_%Y%m%d-%H%M%S')
+        elif o in ('-h', '--help'):
+            usage()
+            sys.exit(0)
+    cmd = actions[ext]
+
+    for pkg in pkgs:
+        if pkg.endswith('/'):
+            pkg = pkg[:-1]
+        pkgname = os.path.basename(pkg)
+        if tm:
+            pkgname += tm
+        os.system(cmd({ 'name': pkgname, 'pkg': pkg }))
+
+if __name__ == "__main__":
+    main()
