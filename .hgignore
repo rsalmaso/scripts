@@ -1,16 +1,17 @@
+syntax: glob
 docs/_build
 .svnignore
 .DS_Store
 .svn
+.git
 Thumbs.db
-local_settings.py
-local_pythonpath.py
 .directory
-
-syntax: glob
 *.swp
+*.egg-info
+build
+dist
 *~
 *-
+__pycache__
 *.pyc
 *.kpf
-
