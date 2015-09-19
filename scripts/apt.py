@@ -25,11 +25,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import os.path
 import sys
-import subprocess
+from stua.os import system
 
-def system(*args, **kwargs):
-    env = kwargs.pop('env', None)
-    return subprocess.call(list(args), env=env)
 
 class Command(object):
     command = None
@@ -40,10 +37,12 @@ class Command(object):
     def __init__(self, apt):
         self.apt = apt
         self.name = self.command or self.__class__.__name__.lower()
+
     def run(self, params, *args, **kwargs):
         cmd = list(self.cmd)
         cmd.extend(params)
         system(*cmd)
+
     def parse(self, params):
         opts, args = self._parse(params)
         for opt, arg in opts:
@@ -52,12 +51,14 @@ class Command(object):
                 sys.exit(0)
             else:
                 self.parse_param(opt, arg)
+
     def help(self):
         print('''  %(name)s%(extra)s: %(help)s''' % {
             'name': self.name,
             'extra': self.verbose_name,
             'help': self.help_text,
         })
+
 
 class GenCaches(Command):
     cmd = ['apt-cache', 'gencaches']
@@ -120,6 +121,7 @@ class Policy(Command):
     verbose_name = ''
     help_text = '''Show policy settings'''
 
+
 class Refresh(Command):
     cmd = ['apt-get', 'update', '&&', 'apt-get', 'dist-upgrade', '-dy']
     verbose_name = ''
@@ -174,6 +176,7 @@ class Download(Command):
     verbose_name = ''
     help_text = '''Download the binary package into the current directory'''
 
+
 class AddKey(Command):
     cmd = ['apt-key', 'add']
     verbose_name = ''
@@ -220,6 +223,7 @@ class ExportKeys(Command):
     command = 'export-keys'
     help_text = '''output all trusted keys'''
 
+
 class AddRepository(Command):
     cmd = ['apt-add-repository']
     verbose_name = ' <sourceline>'
@@ -235,10 +239,11 @@ class RemoveRepository(Command):
     command = 'remove-repository'
     help_text = '''add the key contained in <file> ('-' for stdin)'''
 
+
 class Help(Command):
     def run(self, *args, **kwargs):
         pkgname = os.path.basename(sys.argv[0])
-        print('''%(pkgname)s (C) 1999-2015, Raffaele Salmaso
+        print('''%(pkgname)s (C) 1999-2015 Salmaso Raffaele
 This program is distribuited under the MIT License
 You are not allowed to remove the copyright notice
 
@@ -250,6 +255,7 @@ usage: %(pkgname)s <command> [options] args
             self.apt.commands[name].help()
     def help(self):
         pass
+
 
 COMMANDS = [
     Help,
@@ -271,6 +277,8 @@ COMMANDS = [
     # apt-add-repository
     AddRepository, RemoveRepository,
 ]
+
+
 class Apt(object):
     def __init__(self):
         self.commands = {}
@@ -286,9 +294,11 @@ class Apt(object):
             name = 'help'
         self.commands[name].run(args[1:])
 
+
 def main():
     apt = Apt()
     apt.run(sys.argv[1:])
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()

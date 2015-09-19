@@ -25,83 +25,80 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import os.path
 import sys
-import getopt
 import datetime
+from stua import commands
 
-shortopts = 'ht'
-longopts = [ 'help', 'gz', 'zip', 'cbz', 'epub', 'tgz', 'bz2', 'tz2', 'tar', 'dmg' , 'jar', 'epk', 'xpi', 'btgz', 'bbz2', 'txz', 'xz', 'tm']
-actions = {
-    '--gz'   : lambda data: 'gzip "%(pkg)s"' % data,
-    '--zip'  : lambda data: 'zip -r "%(name)s".zip "%(pkg)s"' % data,
-    '--cbz'  : lambda data: 'zip -r "%(name)s".cbz "%(pkg)s"' % data,
-    '--tgz'  : lambda data: 'tar c "%(pkg)s" | gzip > "%(name)s".tar.gz' % data,
-    '--bz2'  : lambda data: 'bzip2 "%(pkg)s"' % pkg,
-    '--tz2'  : lambda data: 'tar c "%(pkg)s" | bzip2 > "%(name)s".tar.bz2' % data,
-    '--tar'  : lambda data: 'tar c "%(pkg)s" > "%(name)s".tar' % data,
-    '--dmg'  : lambda data: 'hdiutil create -srcfolder "%(pkg)s" "%(pkg)s".dmg' % (pkg, pkg),
-    '--jar'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".jar *' % data,
-    '--xpi'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".xpi *' % data,
-    '--epk'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".epk *' % data,
-    '--epub'  : lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".epub *' % data,
-    '--btgz' : lambda data: 'tar --create --preserve-permissions "%(pkg)s" | gzip > "%(name)s".tar.gz' % data,
-    '--bbz2' : lambda data: 'tar --create --preserve-permissions "%(pkg)s" | bzip2 > "%(name)s".tar.bz2' % data,
-    '--txz'  : lambda data: 'tar c "%(pkg)s" | xz > "%(name)s".tar.xz' % data,
-    '--xz'   : lambda data: 'xz "%(pkg)s"' % data
-}
 
-def usage():
-    pkgname = os.path.basename(sys.argv[0])
-    print('''%s (C) 1999-2015, Raffaele Salmaso
+class Command(commands.Command):
+    help = """(C) 1999-2015 Raffaele Salmaso
 This program is distribuited under the MIT/X License
 You are not allowed to remove the copyright notice
 
-Create an archive file and (optionally) compress it.
+Create an archive file and (optionally) compress it."""
 
-usage: %s [option] dir1 [dir2 ...]
-  - option can be:
-    --gz  = use gzip
-    --bz2 = use bzip2
-    --zip = use zip
-    --tgz = use tar.gz
-    --tz2 = use tar.bz2 (default, can be omitted)
-    --tar = use tar
-    --dmg = create a .dmg file (MacOsX only)
-    --cbz = create a zip file with .cbz extension
-    --jar = create a .jar archive
-    --xpi = create a .xpi archive
-    --tm = add a timestamp
-''' % (pkgname, pkgname))
+    default = "txz"
+    formats = {
+        "gz": {"help": "create a gzip archive", "cmd": lambda data: 'gzip "%(pkg)s"' % data},
+        "zip": {"help": "create a zip archive", "cmd": lambda data: 'zip -r "%(name)s".zip "%(pkg)s"' % data},
+        "cbz": {"help": "create a cbz archive", "cmd": lambda data: 'zip -r "%(name)s".cbz "%(pkg)s"' % data},
+        "tgz": {"help": "create a tar.gz archive", "cmd": lambda data: 'tar c "%(pkg)s" | gzip > "%(name)s".tar.gz' % data},
+        "bz2": {"help": "create a bz2 archive", "cmd": lambda data: 'bzip2 "%(pkg)s"' % data},
+        "tz2": {"help": "create a tar.bz2 archive", "cmd": lambda data: 'tar c "%(pkg)s" | bzip2 > "%(name)s".tar.bz2' % data},
+        "tar": {"help": "create a tar archive", "cmd": lambda data: 'tar c "%(pkg)s" > "%(name)s".tar' % data},
+        "dmg": {"help": "create a dmg archive", "cmd": lambda data: 'hdiutil create -srcfolder "%(pkg)s" "%(pkg)s".dmg' % data},
+        "jar": {"help": "create a jar archive", "cmd": lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".jar *' % data},
+        "xpi": {"help": "create an xpi archive", "cmd": lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".xpi *' % data},
+        "epk": {"help": "create an epk archive", "cmd": lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".epk *' % data},
+        "epub": {"help": "create an epub archive", "cmd": lambda data: 'cd "%(pkg)s" && zip -r ../"%(name)s".epub *' % data},
+        "btgz": {"help": "create a tar.gz archive (preserve permissions)", "cmd": lambda data: 'tar --create --preserve-permissions "%(pkg)s" | gzip > "%(name)s".tar.gz' % data},
+        "bbz2": {"help": "create a tar.bz2 archive (preserve permissions)", "cmd": lambda data: 'tar --create --preserve-permissions "%(pkg)s" | bzip2 > "%(name)s".tar.bz2' % data},
+        "txz": {"help": "create a tar.xz archive", "cmd": lambda data: 'tar c "%(pkg)s" | xz > "%(name)s".tar.xz' % data},
+        "xz": {"help": "create an xz archive", "cmd": lambda data: 'xz "%(pkg)s"' % data},
+    }
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--tm",
+            action="store_true",
+            dest="timestamp",
+            help="add a timestamp to filename",
+        )
+        for key in self.formats.keys():
+            parser.add_argument(
+                "--{}".format(key),
+                action="store_true",
+                dest=key,
+                help=self.formats[key]["help"],
+            )
+        parser.add_argument(
+            "dir",
+            nargs="+",
+            help="dir(s)",
+        )
+
+    def handle(self, command, options):
+        tm = datetime.datetime.now().strftime("_%Y%m%d-%H%M%S") if options.get("timestamp") else ""
+
+        commands = [
+            self.formats[key]["cmd"]
+            for key in self.formats.keys()
+            if options.get(key)
+        ]
+        if not commands:
+            commands = [self.formats[self.default]["cmd"]]
+
+        for pkg in options.get("dir"):
+            if pkg.endswith('/'):
+                pkg = pkg[:-1]
+            pkgname = os.path.basename(pkg)
+            if tm:
+                pkgname += tm
+            for cmd in commands:
+                os.system(cmd({"name": pkgname, "pkg": pkg}))
 
 def main():
-    if len(sys.argv) < 2:
-        usage()
-        sys.exit()
-
-    try:
-        opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
-    except getopt.GetoptError:
-        usage()
-        sys.exit(0)
-
-    ext = '--txz'
-    tm = None
-    for o, a in opts:
-        if o in actions.keys():
-            ext = o
-        elif o in ('-t', '--tm'):
-            tm = datetime.datetime.now().strftime('_%Y%m%d-%H%M%S')
-        elif o in ('-h', '--help'):
-            usage()
-            sys.exit(0)
-    cmd = actions[ext]
-
-    for pkg in pkgs:
-        if pkg.endswith('/'):
-            pkg = pkg[:-1]
-        pkgname = os.path.basename(pkg)
-        if tm:
-            pkgname += tm
-        os.system(cmd({ 'name': pkgname, 'pkg': pkg }))
+    cmd = Command()
+    cmd.run(sys.argv)
 
 if __name__ == "__main__":
     main()

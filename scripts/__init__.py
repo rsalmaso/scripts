@@ -21,8 +21,10 @@
 # THE SOFTWARE.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
+from stua.version import get_version, HG
 
+VERSION = (0, 1, 0, "alpha", 0)
 
 __author__ = "Raffaele Salmaso"
 __author_email__ = "raffaele@salmaso.org"
-__version__ = "0.1.0a0"
+__version__ = get_version(VERSION, HG, __file__)

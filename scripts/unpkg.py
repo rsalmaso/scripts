@@ -25,116 +25,106 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import os.path
 import sys
-import getopt
+from stua import commands
 
-shortopts = 'hd:'
-longopts = [ 'help', 'dest=' ]
-dest = ''
-source = os.getcwd()
-actions = [
-    [ '.tar.bz', 'bzip -cd "%s" | tar xvf -', ],
-    [ '.bz', 'bzip -d "%s"', ],
-    [ '.tar.bz2', 'bzip2 -cd "%s" | tar xvf -', ],
-    [ '.bz2', 'bzip2 -d "%s"', ],
-    [ '.tar.xz', 'xz -cd "%s" | tar xvf -', ],
-    [ '.xz', 'xz -d "%s"', ],
-    [ '.tar.Z', 'tar Zxvf "%s"', ],
-    [ '.taz', 'tar Zxvf "%s"', ],
-    [ '.Z', 'gunzip "%s"', ],
-    [ '.tar.gz', 'tar zxvf "%s"', ],
-    [ '.tgz', 'tar zxvf "%s"', ],
-    [ '.bpp', 'tar zxvf "%s"', ],
-    [ '.etheme', 'tar zxvf "%s"', ],
-    [ '.tz', 'tar zxvf "%s"', ],
-#    [ '.pax.gz', 'gunzip "%s" | cpio -i', ],
-#    [ '.pax', 'cpio -i < "%s"', ],
-    [ '.pax.gz', 'gunzip "%s" | pax -r -pe', ],
-    [ '.pax', 'pax -r -pe -f "%s"', ],
-    [ '.gz', 'gunzip "%s"', ],
-    [ '.tar', 'tar xvf "%s"', ],
-    [ '.zip', 'unzip -C "%s"', ],
-    [ '.cbz', 'unzip -C "%s"', ],
-    [ '.epub', 'unzip -C "%s"', ],
-    [ '.xpi', 'unzip -C "%s"', ],
-    [ '.deb', 'alien -t -c -g "%s"', ],
-    [ '.rpm', 'alien -t -c -g "%s"', ],
-    [ '.dsc', 'dpkg-source -x "%s"', ],
-    [ '.rom', 'unzip -C "%s"', ],
-    [ '.rar', 'unrar x "%s"', ],
-    [ '.cbr', 'unrar x "%s"', ],
-    [ '.ace', 'unace e "%s"', ],
-    [ '.cab', 'cabextract "%s"', ],
-    [ '.jar', 'unzip -C "%s"', ],
-    [ '.war', 'unzip -C "%s"', ],
-    [ '.lha', 'lha x "%s"', ],
-    [ '.lhz', 'lha x "%s"', ],
-    [ '.7z' , '7za x "%s"', ],
-    [ '.zipx' , '7z x "%s"', ],
-]
 
-def usage():
-    pkgname = os.path.basename(sys.argv[0])
-    print('''%s (C) 1999-2015, Raffaele Salmaso
+class Command(commands.Command):
+    @property
+    def help(self):
+        return """(C) 1999-2015 Raffaele Salmaso
 This program is distribuited under the MIT/X License
 You are not allowed to remove the copyright notice
 
 Uncompress multiple archive files with one command.
 
-usage: %s <options> file1 [file2 ... filen] [target-dir]
-  - file* = a list of the files to uncompress
-  - target-dir = where to put the uncompressed files
+Can recognize these extensions: {}""".format(" ".join([format[0] for format in self.formats]))
 
-  options:
-    -h, --help = show this text
-    -d, --dest <dir> where to put the uncompressed files
+    formats = [
+        [ '.tar.bz', 'bzip -cd "%s" | tar xvf -', ],
+        [ '.bz', 'bzip -d "%s"', ],
+        [ '.tar.bz2', 'bzip2 -cd "%s" | tar xvf -', ],
+        [ '.bz2', 'bzip2 -d "%s"', ],
+        [ '.tar.xz', 'xz -cd "%s" | tar xvf -', ],
+        [ '.xz', 'xz -d "%s"', ],
+        [ '.tar.Z', 'tar Zxvf "%s"', ],
+        [ '.taz', 'tar Zxvf "%s"', ],
+        [ '.Z', 'gunzip "%s"', ],
+        [ '.tar.gz', 'tar zxvf "%s"', ],
+        [ '.tgz', 'tar zxvf "%s"', ],
+        [ '.bpp', 'tar zxvf "%s"', ],
+        [ '.etheme', 'tar zxvf "%s"', ],
+        [ '.tz', 'tar zxvf "%s"', ],
+    #    [ '.pax.gz', 'gunzip "%s" | cpio -i', ],
+    #    [ '.pax', 'cpio -i < "%s"', ],
+        [ '.pax.gz', 'gunzip "%s" | pax -r -pe', ],
+        [ '.pax', 'pax -r -pe -f "%s"', ],
+        [ '.gz', 'gunzip "%s"', ],
+        [ '.tar', 'tar xvf "%s"', ],
+        [ '.zip', 'unzip -C "%s"', ],
+        [ '.cbz', 'unzip -C "%s"', ],
+        [ '.epub', 'unzip -C "%s"', ],
+        [ '.xpi', 'unzip -C "%s"', ],
+        [ '.deb', 'alien -t -c -g "%s"', ],
+        [ '.rpm', 'alien -t -c -g "%s"', ],
+        [ '.dsc', 'dpkg-source -x "%s"', ],
+        [ '.rom', 'unzip -C "%s"', ],
+        [ '.rar', 'unrar x "%s"', ],
+        [ '.cbr', 'unrar x "%s"', ],
+        [ '.ace', 'unace e "%s"', ],
+        [ '.cab', 'cabextract "%s"', ],
+        [ '.jar', 'unzip -C "%s"', ],
+        [ '.war', 'unzip -C "%s"', ],
+        [ '.lha', 'lha x "%s"', ],
+        [ '.lhz', 'lha x "%s"', ],
+        [ '.7z' , '7za x "%s"', ],
+        [ '.zipx' , '7z x "%s"', ],
+    ]
 
-%s can recognize these extensions:
-    .tar.bz .bz .tar.bz2 .bz2 .tar.Z .taz .Z .dsc
-    .rom .tz .tar.gz .tgz .bpp .gz .tar .deb .rpm
-    .zip .zipx .etheme .rar .ace .cab .jar .lha .lhz
-    .7z .cbr .cbz .pax.gz .tar.xz .xz .epub
-''' % (pkgname, pkgname, pkgname))
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "archive",
+            nargs="+",
+            help="archive(s)",
+        )
+        parser.add_argument(
+            "dest",
+            nargs="?",
+            help="destination",
+        )
+
+    def handle(self, command, options):
+        source = os.getcwd()
+        dest = options.get("dest")
+        pkgs = options.get("archive")
+
+        if dest is not None:
+            if not os.path.isfile(pkgs[-1]):
+                dest = pkgs[-1]
+                pkgs = pkgs[:-1]
+                if dest.endswith('/'):
+                    dest = dest[:-1]
+
+        if dest is not None:
+            if not os.path.exists(dest):
+                os.makedirs(dest)
+            os.chdir(dest)
+
+        for pkg in pkgs:
+            pkg = os.path.join(source, pkg)
+            try:
+                for row in self.formats:
+                    suffix, action = row[0], row[1]
+                    if pkg.endswith(suffix):
+                        os.system(action % pkg)
+                        raise StopIteration
+                print('package type for %s not supported' % pkg)
+            except StopIteration:
+                pass
+
 
 def main():
-    if len(sys.argv) < 2:
-        usage()
-        sys.exit(0)
-
-    try:
-        opts, pkgs = getopt.getopt(sys.argv[1:], shortopts, longopts)
-    except getopt.GetoptError:
-        usage()
-        sys.exit(0)
-
-    for o, a in opts:
-        if o in ('-d', '--dest'):
-            dest = a
-        elif o in ('-h', '--help'):
-            usage()
-            sys.exit(0)
-
-    if dest == '':
-        if not os.path.isfile(pkgs[-1]):
-            dest = pkgs[-1]
-            pkgs = pkgs[:-1]
-            if dest.endswith('/'):
-                dest = dest[:-1]
-    if dest != '':
-        if not os.path.exists(dest):
-            os.makedirs(dest)
-        os.chdir(dest)
-
-    for pkg in pkgs:
-        pkg = os.path.join(source, pkg)
-        try:
-            for row in actions:
-                suffix, action = row[0], row[1]
-                if pkg.endswith(suffix):
-                    os.system(action % pkg)
-                    raise StopIteration
-            print('package type for %s not supported' % pkg)
-        except StopIteration:
-            pass
+    cmd = Command()
+    cmd.run(sys.argv)
 
 if __name__ == "__main__":
     main()
