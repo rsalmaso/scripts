@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+find . -name "__pycache__" -print0 | xargs -d '\n' -0 rm -rf
 find . -name "*~" -print0 | xargs -d '\n' -0 rm -rf
 find . -name "*.pyc" -print0 | xargs -d '\n' -0 rm -rf
 find . -name "*\$py.class" -print0 | xargs -d '\n' -0 rm -rf
