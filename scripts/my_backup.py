@@ -26,7 +26,10 @@ import os
 import os.path
 import sys
 import datetime
-import MySQLdb
+try:
+    import pymysql
+except ImportError:
+    print("need pymysql, please install it [pip install pymysql]")
 from stua import commands
 
 
@@ -92,7 +95,7 @@ Backup MySQL databases"""
         tm = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
 
         try:
-            conn = MySQLdb.connect(user=user, passwd=password, host=hostname, db='') #user='%(user)s'" % { 'user': user, 'hostname': hostname});
+            conn = pymysql.connect(user=user, passwd=password, host=hostname, db='') #user='%(user)s'" % { 'user': user, 'hostname': hostname});
         except Exception as e:
             sys.stderr.write('%s\n' % e)
             sys.stderr.write("I am unable to connect to the database\n")
