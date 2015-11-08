@@ -39,7 +39,7 @@ Backup MySQL databases"""
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-h", "--host",
+            "-H", "--host",
             action="store",
             dest="host",
             default="localhost",
