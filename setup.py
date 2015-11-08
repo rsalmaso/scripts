@@ -67,6 +67,6 @@ setup(
         'bin/myip',
         'bin/pycclean',
     ],
-    install_requires=[],
+    install_requires=["stua"],
     zip_safe=False,
 )
