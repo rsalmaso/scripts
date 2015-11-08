@@ -26,7 +26,10 @@ import os
 import os.path
 import sys
 import datetime
-import psycopg2
+try:
+    import psycopg2
+except ImportError:
+    print("need psycopg2, please install it [pip install psycopg2]")
 from stua import commands
 
 
