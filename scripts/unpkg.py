@@ -97,12 +97,11 @@ Can recognize these extensions: {}""".format(" ".join([format[0] for format in s
         dest = options.get("dest")
         pkgs = options.get("archive")
 
-        if dest is not None:
-            if not os.path.isfile(pkgs[-1]):
-                dest = pkgs[-1]
-                pkgs = pkgs[:-1]
-                if dest.endswith('/'):
-                    dest = dest[:-1]
+        if not os.path.isfile(pkgs[-1]):
+            dest = pkgs[-1]
+            pkgs = pkgs[:-1]
+            if dest.endswith('/'):
+                dest = dest[:-1]
 
         if dest is not None:
             if not os.path.exists(dest):
