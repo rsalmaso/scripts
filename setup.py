@@ -52,7 +52,6 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'apt = scripts.apt:main',
             'cdblank = scripts.cdblank:main',
             'cdriso = scripts.cdriso:main',
             'cdwrite = scripts.cdwrite:main',
