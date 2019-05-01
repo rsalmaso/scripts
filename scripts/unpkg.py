@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) Raffaele Salmaso <raffaele@salmaso.org>
@@ -124,6 +123,3 @@ Can recognize these extensions: {}""".format(" ".join([format[0] for format in s
 def main():
     cmd = Command()
     cmd.run(sys.argv)
-
-if __name__ == "__main__":
-    main()

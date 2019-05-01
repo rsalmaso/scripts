@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) Raffaele Salmaso <raffaele@salmaso.org>
@@ -176,6 +175,3 @@ def main():
             sys.exit(0)
 
     os.system(exe())
-
-if __name__ == "__main__":
-    main()

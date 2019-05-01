@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) Raffaele Salmaso <raffaele@salmaso.org>
@@ -211,6 +210,3 @@ def main():
     else:
         print('You must provide a file to burn')
     sys.exit(-1)
-
-if __name__ == "__main__":
-    main()

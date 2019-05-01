@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) Raffaele Salmaso <raffaele@salmaso.org>
@@ -104,6 +103,3 @@ def main():
     cmd = ' '.join([cmdline[exe] % output, label, source])
 
     os.system(cmd)
-
-if __name__ == "__main__":
-    main()

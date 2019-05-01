@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) Raffaele Salmaso <raffaele@salmaso.org>
@@ -130,7 +129,3 @@ Backup PostgreSQL databases"""
 def main():
     cmd = Command()
     cmd.run(sys.argv)
-
-
-if __name__ == "__main__":
-    main()
