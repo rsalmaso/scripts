@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 # Copyright (C) Raffaele Salmaso <raffaele@salmaso.org>
@@ -62,7 +61,6 @@ setup(
         ],
     },
     scripts=[
-        'bin/apt-add-key',
         'bin/myip',
         'bin/pycclean',
     ],
