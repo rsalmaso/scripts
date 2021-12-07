@@ -3,6 +3,7 @@
 ## dev
 
 * `apt-add-key`: remove command
+* drop support for python < 3.8
 
 ## 2.0.0
 
