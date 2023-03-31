@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 1999-2015, Raffaele Salmaso <raffaele@salmaso.org>
+# Copyright (C) Raffaele Salmaso <raffaele@salmaso.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ from stua import commands
 class Command(commands.Command):
     @property
     def help(self):
-        return """(C) 1999-2015 Raffaele Salmaso
+        return """(C) Raffaele Salmaso
 This program is distribuited under the MIT/X License
 You are not allowed to remove the copyright notice
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 1999-2015, Raffaele Salmaso <raffaele@salmaso.org>
+# Copyright (C) Raffaele Salmaso <raffaele@salmaso.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ label = ''
 
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    print('''%s (C) 1999-2015, Raffaele Salmaso, 2005 PaulTT
+    print('''%s (C) Raffaele Salmaso, 2005 PaulTT
 This program is distributed under the modified BSD License
 You are not allowed to remove the copyright notice
 
