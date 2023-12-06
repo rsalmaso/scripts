@@ -33,7 +33,7 @@ You are not allowed to remove the copyright notice
 
 Create an archive file and (optionally) compress it."""
 
-    default = "txz"
+    default = "zst"
     formats = {
         "gz": {
             "help": "create a gzip archive",
