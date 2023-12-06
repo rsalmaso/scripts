@@ -20,7 +20,9 @@
 
 import io
 import os
+
 from setuptools import setup
+
 import scripts
 
 setup(
@@ -28,7 +30,7 @@ setup(
     include_package_data=True,
     name="scripts",
     version=scripts.__version__,
-    description = io.open(os.path.join(os.path.dirname(__file__), "README.md"), "rU").read(),
+    description=io.open(os.path.join(os.path.dirname(__file__), "README.md"), "rU").read(),
     long_description="",
     author=scripts.__author__,
     author_email=scripts.__author_email__,
@@ -48,19 +50,19 @@ setup(
         "Development Status :: 4 - Beta",
     ],
     entry_points={
-        'console_scripts': [
-            'cdblank = scripts.cdblank:main',
-            'cdriso = scripts.cdriso:main',
-            'cdwrite = scripts.cdwrite:main',
-            'my-backup = scripts.my_backup:main',
-            'pg-backup = scripts.pg_backup:main',
-            'pkg = scripts.pkg:main',
-            'unpkg = scripts.unpkg:main',
+        "console_scripts": [
+            "cdblank = scripts.cdblank:main",
+            "cdriso = scripts.cdriso:main",
+            "cdwrite = scripts.cdwrite:main",
+            "my-backup = scripts.my_backup:main",
+            "pg-backup = scripts.pg_backup:main",
+            "pkg = scripts.pkg:main",
+            "unpkg = scripts.unpkg:main",
         ],
     },
     scripts=[
-        'bin/myip',
-        'bin/pycclean',
+        "bin/myip",
+        "bin/pycclean",
     ],
     install_requires=["stua"],
     zip_safe=False,

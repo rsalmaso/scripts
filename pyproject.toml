@@ -1,0 +1,51 @@
+[tool.ruff]
+select = [
+    "B", # flake8-bugbear
+    "C9", # mccabe
+    "DJ", # flake8-django
+    "E", # pycodestyle
+    "F", # pyflakes
+    "I", #
+    "W", # pycodestyle
+
+]
+ignore = [
+    "B904", # Within an except clause, raise exceptions with raise ... from err or raise ... from None to
+            # distinguish them from errors in exception handling.
+    "E722", # Do not use bare except, specify exception instead
+]
+fixable = [
+    "I",
+]
+unfixable = [
+    "F401", # don't remove unused import
+]
+line-length = 120
+target-version = "py38"
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "double"
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "lf"
+quote-style = "double"
+
+[tool.ruff.isort]
+combine-as-imports = true
+force-sort-within-sections = true
+force-wrap-aliases = true
+known-third-party = [
+    "stua",
+]
+known-first-party = [
+    "scripts",
+]
+order-by-type = false
+
+[tool.ruff.mccabe]
+max-complexity = 18
+
+[tool.ruff.per-file-ignores]
+"cdriso.py" = ["F841"]
+"pg_backup.py" = ["F504", "F841"]

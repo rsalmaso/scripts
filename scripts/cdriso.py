@@ -18,42 +18,38 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import getopt
 import os
 import os.path
 import sys
-import getopt
 
-shortopts = 'hql:'
-longopts = [ 'help', 'quiet', 'label=' ]
+shortopts = "hql:"
+longopts = ["help", "quiet", "label="]
 
-exe = 'mkisofs'
-if os.uname()[0] == 'Darwin':
-    exe = 'hdiutil'
+exe = "mkisofs"
+if os.uname()[0] == "Darwin":
+    exe = "hdiutil"
 
 cmdline = {
-    'hdiutil' : 'hdiutil makehybrid -ov -iso -hfs -joliet -udf -o "%s"',
-    'mkisofs' : 'mkisofs -allow-lowercase -relaxed-filenames -allow-multidot -allow-leading-dots -joliet -rational-rock -disable-deep-relocation -full-iso9660-filenames -output "%s"'
+    "hdiutil": 'hdiutil makehybrid -ov -iso -hfs -joliet -udf -o "%s"',
+    "mkisofs": (
+        "mkisofs -allow-lowercase -relaxed-filenames -allow-multidot -allow-leading-dots "
+        '-joliet -rational-rock -disable-deep-relocation -full-iso9660-filenames -output "%s"'
+    ),
 }
 
-quietOption = {
-    'hdiutil' : '-quiet',
-    'mkisofs' : '-quiet'
-}
-quietOptionDefault = {
-    'hdiutil' : '-verbose',
-    'mkisofs' : '-verbose'
-}
+quietOption = {"hdiutil": "-quiet", "mkisofs": "-quiet"}
+quietOptionDefault = {"hdiutil": "-verbose", "mkisofs": "-verbose"}
 quiet = quietOptionDefault[exe]
 
-labelOption = {
-    'hdiutil' : '-default-volume-name "%s"',
-    'mkisofs' : '-V "%s"'
-}
-label = ''
+labelOption = {"hdiutil": '-default-volume-name "%s"', "mkisofs": '-V "%s"'}
+label = ""
+
 
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    print('''%s (C) Raffaele Salmaso, 2005 PaulTT
+    print(
+        """%s (C) Raffaele Salmaso, 2005 PaulTT
 This program is distributed under the modified BSD License
 You are not allowed to remove the copyright notice
 
@@ -69,7 +65,10 @@ usage: %s [options] source [image]
 
 The .iso image will create with RockRidge
 and Joliet extension
-''' % (pkgname, pkgname))
+"""
+        % (pkgname, pkgname)
+    )
+
 
 def main():
     try:
@@ -79,24 +78,24 @@ def main():
         sys.exit(-1)
 
     for o, a in opts:
-        if o in ('-q', '--quiet'):
+        if o in ("-q", "--quiet"):
             quiet = quietOption[exe]
-        elif o in ('-l', '--label'):
+        elif o in ("-l", "--label"):
             label = labelOption[exe] % a
-        elif o in ('-h', '--help'):
+        elif o in ("-h", "--help"):
             usage()
             sys.exit(0)
 
     source = args[0]
-    if source.endswith('/'):
+    if source.endswith("/"):
         source = source[:-1]
-    if label == '':
+    if label == "":
         label = labelOption[exe] % os.path.basename(source)
     if len(args) < 2:
-        output = source + '.iso'
+        output = source + ".iso"
     else:
         output = args[1]
     source = '"' + source + '"'
-    cmd = ' '.join([cmdline[exe] % output, label, source])
+    cmd = " ".join([cmdline[exe] % output, label, source])
 
     os.system(cmd)

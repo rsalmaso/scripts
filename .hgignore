@@ -4,6 +4,7 @@ docs/_build
 .DS_Store
 .svn
 .git
+.ruff_cache
 Thumbs.db
 .directory
 *.swp

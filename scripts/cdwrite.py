@@ -18,13 +18,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import getopt
 import os
 import os.path
 import sys
-import getopt
 
-shortopts = 'hd:s:veql'
-longopts = [ 'help', 'device=', 'speed=', 'verify', 'eject', 'quiet', 'list', 'dummy' ]
+shortopts = "hd:s:veql"
+longopts = ["help", "device=", "speed=", "verify", "eject", "quiet", "list", "dummy"]
+
 
 class App:
     def __init__(self, cmdline, device, speed, verify, eject, quiet, dummy, list):
@@ -36,120 +37,152 @@ class App:
         self._quiet = quiet
         self._dummy = dummy
         self._list = list
+
     def __call__(self, args):
-        return ' '.join([self._cmdline, self._device, self._speed, self._verify, self._eject, self._quiet, self._dummy, self._list, '"' + args + '"'])
+        return " ".join(
+            [
+                self._cmdline,
+                self._device,
+                self._speed,
+                self._verify,
+                self._eject,
+                self._quiet,
+                self._dummy,
+                self._list,
+                '"' + args + '"',
+            ]
+        )
+
 
 class HdiUtil(App):
     def __init__(self):
         App.__init__(
             self,
-            cmdline = 'hdiutil burn',
-            device = '',
-            speed = '',
-            verify = '-noverifyburn',
-            eject = '-noeject',
-            quiet = '',
-            dummy = '',
-            list = ''
+            cmdline="hdiutil burn",
+            device="",
+            speed="",
+            verify="-noverifyburn",
+            eject="-noeject",
+            quiet="",
+            dummy="",
+            list="",
         )
+
     def device(self, device):
-        self._device = '-device %s' % device
+        self._device = "-device %s" % device
+
     def speed(self, speed):
-        self._speed = '-speed %s' % speed
+        self._speed = "-speed %s" % speed
+
     def verify(self):
-        self._verify = '-verifyburn'
+        self._verify = "-verifyburn"
+
     def eject(self):
-        self._eject = '-eject'
+        self._eject = "-eject"
+
     def quiet(self):
-        self._quiet = '-quiet'
+        self._quiet = "-quiet"
+
     def dummy(self):
-        self._dummy = '-testburn'
+        self._dummy = "-testburn"
+
     def list(self):
-        ''' hdiutil -list must be the only option '''
-        self._device = ''
-        self._speed = ''
-        self._verify = ''
-        self._eject = ''
-        self._quiet = ''
-        self._dummy = ''
-        self._list = '-list'
+        """hdiutil -list must be the only option"""
+        self._device = ""
+        self._speed = ""
+        self._verify = ""
+        self._eject = ""
+        self._quiet = ""
+        self._dummy = ""
+        self._list = "-list"
+
 
 class Cdrecord(App):
     def __init__(self):
         App.__init__(
             self,
-            cmdline = 'cdrecord immed',
-            device = 'dev=/dev/cdrom',
-            speed = '',
-            verify = '',
-            eject = '',
-            quiet = '-v',
-            dummy = '',
-            list = ''
+            cmdline="cdrecord immed",
+            device="dev=/dev/cdrom",
+            speed="",
+            verify="",
+            eject="",
+            quiet="-v",
+            dummy="",
+            list="",
         )
+
     def device(self, device):
-        self._device = 'dev=%s' % device
+        self._device = "dev=%s" % device
+
     def speed(self, speed):
-        self._speed = 'speed=%s' % speed
+        self._speed = "speed=%s" % speed
+
     def verify(self):
-        self._verify = ''
+        self._verify = ""
+
     def eject(self):
-        self._eject = '-eject'
+        self._eject = "-eject"
+
     def quiet(self):
-        self._quiet = ''
+        self._quiet = ""
+
     def dummy(self):
-        self._dummy = '-dummy'
+        self._dummy = "-dummy"
+
     def list(self):
-        self._device = ''
-        self._speed = ''
-        self._blank = ''
-        self._eject = ''
-        self._quiet = ''
-        self._dummy = ''
-        self._list = '-scanbus'
+        self._device = ""
+        self._speed = ""
+        self._blank = ""
+        self._eject = ""
+        self._quiet = ""
+        self._dummy = ""
+        self._list = "-scanbus"
+
 
 class Wodim(App):
     def __init__(self):
         App.__init__(
-            self,
-            cmdline = 'wodim',
-            device = 'dev=/dev/cdrom',
-            speed = '',
-            verify = '',
-            eject = '',
-            quiet = '-v',
-            dummy = '',
-            list = ''
+            self, cmdline="wodim", device="dev=/dev/cdrom", speed="", verify="", eject="", quiet="-v", dummy="", list=""
         )
-    def device(self, device):
-        self._device = 'dev=%s' % device
-    def speed(self, speed):
-        self._speed = 'speed=%s' % speed
-    def verify(self):
-        self._verify = ''
-    def eject(self):
-        self._eject = '-eject'
-    def quiet(self):
-        self._quiet = ''
-    def dummy(self):
-        self._dummy = '-dummy'
-    def list(self):
-        self._device = ''
-        self._speed = ''
-        self._blank = ''
-        self._eject = ''
-        self._quiet = ''
-        self._dummy = ''
-        self._list = '-scanbus'
 
-if os.uname()[0] == 'Darwin':
+    def device(self, device):
+        self._device = "dev=%s" % device
+
+    def speed(self, speed):
+        self._speed = "speed=%s" % speed
+
+    def verify(self):
+        self._verify = ""
+
+    def eject(self):
+        self._eject = "-eject"
+
+    def quiet(self):
+        self._quiet = ""
+
+    def dummy(self):
+        self._dummy = "-dummy"
+
+    def list(self):
+        self._device = ""
+        self._speed = ""
+        self._blank = ""
+        self._eject = ""
+        self._quiet = ""
+        self._dummy = ""
+        self._list = "-scanbus"
+
+
+if os.uname()[0] == "Darwin":
     exe = HdiUtil()
 else:
     exe = Wodim()
 
+
 def usage():
     pkgname = os.path.basename(sys.argv[0])
-    print('''%s (C) Raffaele Salmaso
+    print(
+        """%s (C) Raffaele Salmaso
 This program is distributed under the MIT/X License
 You are not allowed to remove the copyright notice
 
@@ -165,7 +198,10 @@ usage: %s [options] <file.iso>
     -q, --quiet = no progress output will be provided
     -l, --list = list all burning devices, for --device
         --dummy = don't turn on laser
-''' % (pkgname, pkgname))
+"""
+        % (pkgname, pkgname)
+    )
+
 
 def main():
     try:
@@ -176,22 +212,22 @@ def main():
 
     dolist = False
     for o, a in opts:
-        if o in ('-d', '--device'):
+        if o in ("-d", "--device"):
             exe.device(a)
-        elif o in ('-s', '--speed'):
+        elif o in ("-s", "--speed"):
             exe.speed(a)
-        elif o in ('-v', '--verify'):
+        elif o in ("-v", "--verify"):
             exe.verify()
-        elif o in ('-e', '--eject'):
+        elif o in ("-e", "--eject"):
             exe.eject()
-        elif o in ('-l', '--list'):
+        elif o in ("-l", "--list"):
             exe.list()
             dolist = True
-        elif o in ('-q', '--quiet'):
+        elif o in ("-q", "--quiet"):
             exe.quiet()
-        elif o == '--dummy':
+        elif o == "--dummy":
             exe.dummy()
-        elif o in ('-h', '--help'):
+        elif o in ("-h", "--help"):
             usage()
             sys.exit(0)
 
@@ -203,7 +239,7 @@ def main():
             print('"%s" is not a file' % args[0])
     elif dolist:
         # dolist : doesn't need a file to be burn
-        os.system(exe(''))
+        os.system(exe(""))
     else:
-        print('You must provide a file to burn')
+        print("You must provide a file to burn")
     sys.exit(-1)

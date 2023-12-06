@@ -18,10 +18,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import datetime
 import os
 import os.path
 import sys
-import datetime
+
 try:
     import pymysql
 except ImportError:
@@ -38,42 +39,48 @@ Backup MySQL databases"""
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-H", "--host",
+            "-H",
+            "--host",
             action="store",
             dest="host",
             default="localhost",
             help="the hostname",
         )
         parser.add_argument(
-            "-u", "--user",
+            "-u",
+            "--user",
             action="store",
             dest="user",
             default="root",
             help="the user",
         )
         parser.add_argument(
-            "-w", "--password",
+            "-w",
+            "--password",
             action="store",
             dest="user",
             default="",
             help="password",
         )
         parser.add_argument(
-            "-p", "--port",
+            "-p",
+            "--port",
             action="store",
             dest="port",
             default=3306,
             help="the TCP port",
         )
         parser.add_argument(
-            "-d", "--dest",
+            "-d",
+            "--dest",
             action="store",
             dest="dest",
             default=".",
             help="where to put backup files",
         )
         parser.add_argument(
-            "-a", "--all",
+            "-a",
+            "--all",
             action="store_true",
             dest="all",
             default=False,
@@ -81,19 +88,24 @@ Backup MySQL databases"""
         )
 
     def handle(self, command, options):
-        tm = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+        tm = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         user = options.get("user")
         hostname = options.get("hostname")
         password = options.get("password")
         dest = options.get("dest")
         port = options.get("port")
         all = options.get("all")
-        tm = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+        tm = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
         try:
-            conn = pymysql.connect(user=user, passwd=password, host=hostname, db='') #user='%(user)s'" % { 'user': user, 'hostname': hostname});
+            conn = pymysql.connect(
+                user=user,
+                passwd=password,
+                host=hostname,
+                db="",
+            )
         except Exception as e:
-            sys.stderr.write('%s\n' % e)
+            sys.stderr.write("%s\n" % e)
             sys.stderr.write("I am unable to connect to the database\n")
             sys.exit(1)
 
@@ -101,40 +113,49 @@ Backup MySQL databases"""
         cur.execute("""show databases""")
         rows = cur.fetchall()
         print("\nBackup the MySQL databases:\n")
-        os.system("""mkdir -p "%(dest)s/%(date)s/" """ % {
-            'date': tm,
-            'dest': dest,
-        })
+        os.system(
+            """mkdir -p "%(dest)s/%(date)s/" """
+            % {
+                "date": tm,
+                "dest": dest,
+            }
+        )
 
         if password:
-            password = '--password=%s' % password
+            password = "--password=%s" % password
         if hostname:
-            hostname = '--host=%s' % hostname
+            hostname = "--host=%s" % hostname
         if port:
-            port = '--port=%s' % port
+            port = "--port=%s" % port
 
         for row in rows:
             print("   %s\n" % row[0])
-            os.system("""/usr/bin/mysqldump --user=%(user)s %(host)s %(port)s %(passwd)s %(db)s | xz > "%(dest)s/%(date)s/%(db)s_%(date)s.db.xz" """ % {
-                'db': row[0],
-                'date': tm,
-                'user': user,
-                'host': hostname,
-                'port': port,
-                'dest': dest,
-                'passwd': password,
-            })
+            os.system(
+                """/usr/bin/mysqldump --user=%(user)s %(host)s %(port)s %(passwd)s %(db)s | xz > "%(dest)s/%(date)s/%(db)s_%(date)s.db.xz" """  # noqa: E501
+                % {
+                    "db": row[0],
+                    "date": tm,
+                    "user": user,
+                    "host": hostname,
+                    "port": port,
+                    "dest": dest,
+                    "passwd": password,
+                }
+            )
 
         if all:
             print("Dump all databases\n")
-            os.system("""/usr/bin/mysqldump --all-databases --user=%(user)s %(host)s %(port)s %(passwd)s | xz > "%(dest)s/%(date)s/mysqldump_%(date)s.xz" """ % {
-                'date': tm,
-                'user': user,
-                'host': hostname,
-                'port': port,
-                'dest': dest,
-                'passwd': password,
-            })
+            os.system(
+                """/usr/bin/mysqldump --all-databases --user=%(user)s %(host)s %(port)s %(passwd)s | xz > "%(dest)s/%(date)s/mysqldump_%(date)s.xz" """  # noqa: E501
+                % {
+                    "date": tm,
+                    "user": user,
+                    "host": hostname,
+                    "port": port,
+                    "dest": dest,
+                    "passwd": password,
+                }
+            )
 
 
 def main():
