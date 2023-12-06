@@ -59,6 +59,10 @@ Create an archive file and (optionally) compress it."""
             "help": "create a tar.bz2 archive",
             "cmd": lambda data: 'tar c "%(pkg)s" | bzip2 > "%(name)s".tar.bz2' % data,
         },
+        "zst": {
+            "help": "create a zstd archive",
+            "cmd": lambda data: 'zstd --rm "%(pkg)s"' % data,
+        },
         "tz": {
             "help": "create a tar.zst archive",
             "cmd": lambda data: 'tar c "%(pkg)s" | zstd > "%(name)s".tar.zst' % data,
