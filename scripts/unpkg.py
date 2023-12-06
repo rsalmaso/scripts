@@ -75,6 +75,8 @@ Can recognize these extensions: {}""".format(" ".join([format[0] for format in s
         [".lhz", 'lha x "%s"'],
         [".7z", '7za x "%s"'],
         [".zipx", '7z x "%s"'],
+        [".tar.zst", 'zstd -cd "%s" | tar xvf -'],
+        [".zst", 'zstd -d "%s"'],
     ]
 
     def add_arguments(self, parser):

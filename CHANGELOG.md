@@ -5,7 +5,7 @@
 * `apt-add-key`: remove command
 * drop support for python < 3.8
 * format and lint code with ruff
-* pkg: add support for zstandard files
+* pkg & unpkg: add support for zstandard files
 
 ## 2.0.0
 
