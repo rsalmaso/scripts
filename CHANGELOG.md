@@ -6,6 +6,7 @@
 * drop support for python < 3.8
 * format and lint code with ruff
 * pkg & unpkg: add support for zstandard files
+* `pkg`: rewrite command to autodetect which format to use: tar.ext for directories, .ext for files
 
 ## 2.0.0
 
