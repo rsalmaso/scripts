@@ -93,8 +93,8 @@ Can recognize these extensions: {}""".format(" ".join([format[0] for format in s
 
     def handle(self, command, options):
         source = os.getcwd()
-        dest = options.get("dest")
-        pkgs = options.get("archive")
+        dest = options.dest
+        pkgs = options.archive
 
         if not os.path.isfile(pkgs[-1]):
             dest = pkgs[-1]

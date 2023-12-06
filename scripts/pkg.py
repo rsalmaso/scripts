@@ -139,13 +139,13 @@ Create an archive file and (optionally) compress it."""
         )
 
     def handle(self, command, options):
-        tm = datetime.datetime.now().strftime("_%Y%m%d-%H%M%S") if options.get("timestamp") else ""
+        tm = datetime.datetime.now().strftime("_%Y%m%d-%H%M%S") if options.timestamp else ""
 
         commands = [self.formats[key] for key in self.formats.keys() if getattr(options, key, False)]
         if not commands:
             commands = [self.formats[self.default]]
 
-        for pkg in options.get("dir"):
+        for pkg in options.dir:
             if pkg.endswith("/"):
                 pkg = pkg[:-1]
             basename = os.path.basename(pkg)

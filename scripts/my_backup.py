@@ -89,12 +89,12 @@ Backup MySQL databases"""
 
     def handle(self, command, options):
         tm = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        user = options.get("user")
-        hostname = options.get("hostname")
-        password = options.get("password")
-        dest = options.get("dest")
-        port = options.get("port")
-        all = options.get("all")
+        user = options.user
+        hostname = options.hostname
+        password = options.password
+        dest = options.dest
+        port = options.port
+        all = options.all
         tm = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
         try:
